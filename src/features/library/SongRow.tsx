@@ -2,6 +2,7 @@ import { memo } from 'react';
 import type { CSSProperties } from 'react';
 import type { Song } from '../../types';
 import { formatDuration } from '../../utils/format';
+import { useFavoritesStore } from '../favorites/useFavoritesStore';
 import { usePlayerStore } from '../player/usePlayerStore';
 
 export interface SongRowProps {
@@ -23,6 +24,8 @@ export const SongRow = memo(function SongRow({
     (state) =>
       state.currentIndex >= 0 && state.queue[state.currentIndex]?.id === song.id,
   );
+  const isFavorite = useFavoritesStore((state) => state.ids.includes(song.id));
+  const toggleFavorite = useFavoritesStore((state) => state.toggle);
 
   return (
     <div
@@ -54,6 +57,17 @@ export const SongRow = memo(function SongRow({
             <path d="M2 1.2v9.6L10.5 6 2 1.2Z" fill="currentColor" />
           </svg>
           <span className="btn-text">Phát</span>
+        </button>
+
+        <button
+          type="button"
+          className={`icon-btn heart${isFavorite ? ' is-active' : ''}`}
+          aria-label={isFavorite ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'}
+          aria-pressed={isFavorite}
+          title={isFavorite ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'}
+          onClick={() => toggleFavorite(song.id)}
+        >
+          {isFavorite ? '♥' : '♡'}
         </button>
 
         <button

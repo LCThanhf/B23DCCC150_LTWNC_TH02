@@ -5,6 +5,7 @@ import { NavLink, Route, Routes } from 'react-router-dom';
 import './App.css';
 import FavoritesPage from './features/favorites/FavoritesPage';
 import LibraryPage from './features/library/LibraryPage';
+import { PlayerBar } from './features/player/PlayerBar';
 import PlaylistDetailPage from './features/playlists/PlaylistDetailPage';
 import PlaylistsPage from './features/playlists/PlaylistsPage';
 
@@ -121,6 +122,8 @@ export default function App() {
           <Route path="/playlists/:id" element={<PlaylistDetailPage />} />
         </Routes>
       </main>
+
+      <PlayerBar />
     </div>
   );
 }

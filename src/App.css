@@ -337,7 +337,7 @@
 .list-head,
 .song-row {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) 108px 70px minmax(210px, auto);
+  grid-template-columns: 46px minmax(0, 1fr) 108px 70px minmax(230px, auto);
   align-items: center;
   column-gap: 12px;
 }
@@ -1017,7 +1017,7 @@
 @media (max-width: 1120px) {
   .list-head,
   .song-row {
-    grid-template-columns: 42px minmax(0, 1fr) 66px minmax(196px, auto);
+    grid-template-columns: 42px minmax(0, 1fr) 66px minmax(210px, auto);
   }
 
   .list-head-genre,

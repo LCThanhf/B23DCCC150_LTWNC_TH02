@@ -220,7 +220,9 @@ export default function LibraryPage() {
       </section>
 
       <p className="result-line" aria-live="polite">
-        Tìm thấy <span className="result-count">{filteredSongs.length}</span> bài hát
+        <span className="result-text">
+          Tìm thấy {filteredSongs.length} bài hát
+        </span>
       </p>
 
       {filteredSongs.length === 0 ? (

@@ -32,6 +32,8 @@ const ROW_HEIGHT = 56;
 const LIST_HEIGHT = 560;
 const FALLBACK_WIDTH = 960;
 
+const getItemKey = (index: number, data: RowData) => data.songs[index].id;
+
 export interface VirtualSongListProps {
   songs: Song[];
   onPlay: (song: Song) => void;
@@ -90,8 +92,8 @@ export const VirtualSongList = memo(function VirtualSongList({
         itemCount={songs.length}
         itemSize={ROW_HEIGHT}
         itemData={itemData}
-        itemKey={(index, data) => data.songs[index].id}
-        overscanCount={6}
+        itemKey={getItemKey}
+        overscanCount={4}
         className="song-scroll"
       >
         {Row}

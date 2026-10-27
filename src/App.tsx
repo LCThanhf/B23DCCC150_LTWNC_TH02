@@ -92,7 +92,34 @@ function AppShell() {
       <aside className="sidebar">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true">
-            ♫
+            <svg
+              width="22"
+              height="22"
+              viewBox="4.9 2.3 17.6 17.6"
+              fill="none"
+              focusable="false"
+              aria-hidden="true"
+            >
+              <path d="M8.7 4.2 20.7 2.7v2.6L8.7 6.8z" fill="currentColor" />
+              <rect x="8.7" y="5.3" width="1.7" height="11.5" fill="currentColor" />
+              <rect x="19" y="3.8" width="1.7" height="11.2" fill="currentColor" />
+              <ellipse
+                cx="9.4"
+                cy="17.2"
+                rx="2.7"
+                ry="2.15"
+                transform="rotate(-20 9.4 17.2)"
+                fill="currentColor"
+              />
+              <ellipse
+                cx="19.7"
+                cy="15.6"
+                rx="2.7"
+                ry="2.15"
+                transform="rotate(-20 19.7 15.6)"
+                fill="currentColor"
+              />
+            </svg>
           </span>
           <div>
             <p className="brand-title">Mini Player</p>
@@ -116,28 +143,45 @@ function AppShell() {
         </nav>
 
         <div className="sidebar-footer">
-          <button type="button" className="theme-toggle" onClick={toggleTheme}>
-            <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
-            <span className="theme-label">
-              {theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
-            </span>
-          </button>
           <span className="build-tag" title="Mã bản dựng">
             {BUILD_TAG}
           </span>
         </div>
       </aside>
 
-      <main className="main">
-        <Suspense fallback={<p className="loading-state">Đang tải trang...</p>}>
-          <Routes>
-            <Route path="/" element={<LibraryPage />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
-            <Route path="/playlists" element={<PlaylistsPage />} />
-            <Route path="/playlists/:id" element={<PlaylistDetailPage />} />
-          </Routes>
-        </Suspense>
-      </main>
+      <div className="content">
+        <div className="topbar">
+          <div className="topbar-inner">
+            <button
+              type="button"
+              className="theme-toggle"
+              aria-label={theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
+              title={theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
+              onClick={toggleTheme}
+            >
+              <span className="theme-icon" aria-hidden="true">
+                {theme === 'dark' ? '☀' : '☾'}
+              </span>
+              <span className="theme-label">
+                {theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <main className="main">
+          <div className="main-inner">
+            <Suspense fallback={<p className="loading-state">Đang tải trang...</p>}>
+              <Routes>
+                <Route path="/" element={<LibraryPage />} />
+                <Route path="/favorites" element={<FavoritesPage />} />
+                <Route path="/playlists" element={<PlaylistsPage />} />
+                <Route path="/playlists/:id" element={<PlaylistDetailPage />} />
+              </Routes>
+            </Suspense>
+          </div>
+        </main>
+      </div>
 
       <PlayerBar />
     </div>

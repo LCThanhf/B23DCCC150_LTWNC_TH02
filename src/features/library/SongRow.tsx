@@ -56,7 +56,7 @@ export const SongRow = memo(function SongRow({
         <button
           type="button"
           className="btn btn-play"
-          aria-label={`Phát ${song.title}`}
+          title={`Phát ${song.title}`}
           onClick={() => onPlay(song)}
         >
           <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true">
@@ -78,40 +78,23 @@ export const SongRow = memo(function SongRow({
 
         <button
           type="button"
-          className="icon-btn"
-          aria-label={`Thêm ${song.title} vào hàng đợi`}
-          title="Thêm vào hàng đợi"
+          className="btn btn-queue"
+          title={`Thêm ${song.title} vào hàng đợi`}
           onClick={() => onAddToQueue(song)}
         >
-          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
-            <path
-              d="M2 4h8M2 8h8M2 12h5M13 6v6"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              fill="none"
-            />
-            <path
-              d="M10.5 9.5 13 12l2.5-2.5"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-            />
-          </svg>
+          <span>+</span>{' '}
+          <span className="btn-text">Hàng đợi</span>
         </button>
 
         {onAddToPlaylist && (
           <button
             type="button"
             className="btn btn-playlist"
-            aria-label={`Thêm ${song.title} vào playlist`}
             title={playlistDisabled ? 'Chọn playlist trước' : 'Thêm vào playlist'}
             disabled={playlistDisabled}
             onClick={() => onAddToPlaylist(song)}
           >
-            <span aria-hidden="true">+</span>
+            <span>+</span>{' '}
             <span className="btn-text">Playlist</span>
           </button>
         )}
@@ -120,7 +103,7 @@ export const SongRow = memo(function SongRow({
           <button
             type="button"
             className="btn btn-ghost btn-danger"
-            aria-label={`Bỏ ${song.title} khỏi playlist`}
+            title={`Bỏ ${song.title} khỏi playlist`}
             onClick={() => onRemove(song)}
           >
             Bỏ

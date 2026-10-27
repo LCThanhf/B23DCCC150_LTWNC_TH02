@@ -68,7 +68,6 @@ function PlaylistForm({ existingNames }: PlaylistFormProps) {
       </div>
       {error && (
         <p id="playlist-form-error" className="form-error" role="alert">
-          <span aria-hidden="true">!</span>
           {error}
         </p>
       )}

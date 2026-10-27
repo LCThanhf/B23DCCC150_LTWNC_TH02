@@ -1,13 +1,19 @@
 const BUILD_TAG = "mz-4073";
 
+import { Suspense, lazy } from 'react';
 import type { ReactNode } from 'react';
 import { NavLink, Route, Routes } from 'react-router-dom';
 import './App.css';
-import FavoritesPage from './features/favorites/FavoritesPage';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import LibraryPage from './features/library/LibraryPage';
 import { PlayerBar } from './features/player/PlayerBar';
-import PlaylistDetailPage from './features/playlists/PlaylistDetailPage';
-import PlaylistsPage from './features/playlists/PlaylistsPage';
+import { PlaylistProvider } from './features/playlists/PlaylistContext';
+
+const FavoritesPage = lazy(() => import('./features/favorites/FavoritesPage'));
+const PlaylistsPage = lazy(() => import('./features/playlists/PlaylistsPage'));
+const PlaylistDetailPage = lazy(
+  () => import('./features/playlists/PlaylistDetailPage'),
+);
 
 interface NavItem {
   to: string;
@@ -78,7 +84,9 @@ const NAV_ITEMS: NavItem[] = [
   },
 ];
 
-export default function App() {
+function AppShell() {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <div className="app">
       <aside className="sidebar">
@@ -108,6 +116,12 @@ export default function App() {
         </nav>
 
         <div className="sidebar-footer">
+          <button type="button" className="theme-toggle" onClick={toggleTheme}>
+            <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
+            <span className="theme-label">
+              {theme === 'dark' ? 'Giao diện sáng' : 'Giao diện tối'}
+            </span>
+          </button>
           <span className="build-tag" title="Mã bản dựng">
             {BUILD_TAG}
           </span>
@@ -115,15 +129,27 @@ export default function App() {
       </aside>
 
       <main className="main">
-        <Routes>
-          <Route path="/" element={<LibraryPage />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
-          <Route path="/playlists" element={<PlaylistsPage />} />
-          <Route path="/playlists/:id" element={<PlaylistDetailPage />} />
-        </Routes>
+        <Suspense fallback={<p className="loading-state">Đang tải trang...</p>}>
+          <Routes>
+            <Route path="/" element={<LibraryPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/playlists" element={<PlaylistsPage />} />
+            <Route path="/playlists/:id" element={<PlaylistDetailPage />} />
+          </Routes>
+        </Suspense>
       </main>
 
       <PlayerBar />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <PlaylistProvider>
+        <AppShell />
+      </PlaylistProvider>
+    </ThemeProvider>
   );
 }

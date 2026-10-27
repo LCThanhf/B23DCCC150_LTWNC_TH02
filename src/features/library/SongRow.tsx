@@ -11,6 +11,9 @@ export interface SongRowProps {
   style?: CSSProperties;
   onPlay: (song: Song) => void;
   onAddToQueue: (song: Song) => void;
+  onAddToPlaylist?: (song: Song) => void;
+  playlistDisabled?: boolean;
+  onRemove?: (song: Song) => void;
 }
 
 export const SongRow = memo(function SongRow({
@@ -19,6 +22,9 @@ export const SongRow = memo(function SongRow({
   style,
   onPlay,
   onAddToQueue,
+  onAddToPlaylist,
+  playlistDisabled = false,
+  onRemove,
 }: SongRowProps) {
   const isCurrent = usePlayerStore(
     (state) =>
@@ -95,6 +101,31 @@ export const SongRow = memo(function SongRow({
             />
           </svg>
         </button>
+
+        {onAddToPlaylist && (
+          <button
+            type="button"
+            className="btn btn-playlist"
+            aria-label={`Thêm ${song.title} vào playlist`}
+            title={playlistDisabled ? 'Chọn playlist trước' : 'Thêm vào playlist'}
+            disabled={playlistDisabled}
+            onClick={() => onAddToPlaylist(song)}
+          >
+            <span aria-hidden="true">+</span>
+            <span className="btn-text">Playlist</span>
+          </button>
+        )}
+
+        {onRemove && (
+          <button
+            type="button"
+            className="btn btn-ghost btn-danger"
+            aria-label={`Bỏ ${song.title} khỏi playlist`}
+            onClick={() => onRemove(song)}
+          >
+            Bỏ
+          </button>
+        )}
       </div>
     </div>
   );

@@ -4,6 +4,10 @@ import { GENRES, SONGS } from '../../data/songs';
 import { useDebounce } from '../../hooks/useDebounce';
 import type { Genre, Song } from '../../types';
 import { usePlayerStore } from '../player/usePlayerStore';
+import {
+  usePlaylistDispatch,
+  usePlaylists,
+} from '../playlists/PlaylistContext';
 import { VirtualSongList } from './VirtualSongList';
 
 type GenreFilter = Genre | 'All';
@@ -19,10 +23,19 @@ export default function LibraryPage() {
   const [query, setQuery] = useState('');
   const [genre, setGenre] = useState<GenreFilter>('All');
   const [sort, setSort] = useState<SortKey>('default');
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState('');
 
+  const playlists = usePlaylists();
+  const playlistDispatch = usePlaylistDispatch();
   const debouncedQuery = useDebounce(query, 300);
   const playQueue = usePlayerStore((state) => state.playQueue);
   const addToQueue = usePlayerStore((state) => state.addToQueue);
+
+  const activePlaylistId = playlists.some(
+    (playlist) => playlist.id === selectedPlaylistId,
+  )
+    ? selectedPlaylistId
+    : '';
 
   const filteredSongs = useMemo<Song[]>(() => {
     const keyword = debouncedQuery.trim().toLowerCase();
@@ -64,6 +77,13 @@ export default function LibraryPage() {
     setSort(event.target.value as SortKey);
   }, []);
 
+  const handlePlaylistChange = useCallback(
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      setSelectedPlaylistId(event.target.value);
+    },
+    [],
+  );
+
   const handlePlay = useCallback(
     (song: Song) => {
       const startIndex = filteredSongs.findIndex((item) => item.id === song.id);
@@ -77,6 +97,18 @@ export default function LibraryPage() {
       addToQueue(song);
     },
     [addToQueue],
+  );
+
+  const handleAddToPlaylist = useCallback(
+    (song: Song) => {
+      if (!activePlaylistId) return;
+
+      playlistDispatch({
+        type: 'addSong',
+        payload: { playlistId: activePlaylistId, songId: song.id },
+      });
+    },
+    [activePlaylistId, playlistDispatch],
   );
 
   return (
@@ -163,6 +195,28 @@ export default function LibraryPage() {
             ))}
           </select>
         </div>
+
+        <div className="field field--playlist">
+          <label className="field-label" htmlFor="playlist-filter">
+            Playlist đang chọn
+          </label>
+          <select
+            id="playlist-filter"
+            className="select"
+            value={activePlaylistId}
+            onChange={handlePlaylistChange}
+            disabled={playlists.length === 0}
+          >
+            <option value="">
+              {playlists.length === 0 ? 'Chưa có playlist' : '— Chọn playlist —'}
+            </option>
+            {playlists.map((playlist) => (
+              <option key={playlist.id} value={playlist.id}>
+                {playlist.name} ({playlist.songIds.length})
+              </option>
+            ))}
+          </select>
+        </div>
       </section>
 
       <p className="result-line" aria-live="polite">
@@ -190,6 +244,8 @@ export default function LibraryPage() {
             songs={filteredSongs}
             onPlay={handlePlay}
             onAddToQueue={handleAddToQueue}
+            onAddToPlaylist={handleAddToPlaylist}
+            playlistDisabled={!activePlaylistId}
           />
         </>
       )}

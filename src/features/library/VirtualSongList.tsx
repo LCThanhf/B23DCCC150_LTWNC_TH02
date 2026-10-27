@@ -8,6 +8,8 @@ interface RowData {
   songs: Song[];
   onPlay: (song: Song) => void;
   onAddToQueue: (song: Song) => void;
+  onAddToPlaylist?: (song: Song) => void;
+  playlistDisabled: boolean;
 }
 
 const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
@@ -20,6 +22,8 @@ const Row = ({ index, style, data }: ListChildComponentProps<RowData>) => {
       style={style}
       onPlay={data.onPlay}
       onAddToQueue={data.onAddToQueue}
+      onAddToPlaylist={data.onAddToPlaylist}
+      playlistDisabled={data.playlistDisabled}
     />
   );
 };
@@ -32,12 +36,16 @@ export interface VirtualSongListProps {
   songs: Song[];
   onPlay: (song: Song) => void;
   onAddToQueue: (song: Song) => void;
+  onAddToPlaylist?: (song: Song) => void;
+  playlistDisabled?: boolean;
 }
 
 export const VirtualSongList = memo(function VirtualSongList({
   songs,
   onPlay,
   onAddToQueue,
+  onAddToPlaylist,
+  playlistDisabled = false,
 }: VirtualSongListProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(FALLBACK_WIDTH);
@@ -64,8 +72,14 @@ export const VirtualSongList = memo(function VirtualSongList({
   }, []);
 
   const itemData = useMemo<RowData>(
-    () => ({ songs, onPlay, onAddToQueue }),
-    [songs, onPlay, onAddToQueue],
+    () => ({
+      songs,
+      onPlay,
+      onAddToQueue,
+      onAddToPlaylist,
+      playlistDisabled,
+    }),
+    [songs, onPlay, onAddToQueue, onAddToPlaylist, playlistDisabled],
   );
 
   return (
